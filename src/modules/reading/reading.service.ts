@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { encode } from 'bs58';
 import { isArray } from 'util';
-import { TaskQueue } from 'cwait';
 
 @Injectable()
 export class ReadingService {
@@ -43,6 +42,15 @@ export class ReadingService {
       // console.log(dummyReadings);
       return encode(Buffer.from(JSON.stringify(reading)));
     });
+  }
+
+  async fakeReding() {
+    return {
+      temperature: await this.readingRepository.query('select temperature, createdAt from reading'),
+      rssi: await this.readingRepository.query('select rssi, createdAt from reading'),
+      pressure: await this.readingRepository.query('select pressure, createdAt from reading'),
+      humidity: await this.readingRepository.query('select humidity, createdAt from reading'),
+    };
   }
 
   async findAll() {
