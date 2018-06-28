@@ -24,15 +24,15 @@ export class ReadingService {
   async mimicReadingTransaction(dummyTransactions: Array<object>, cid: string) {
 
     const uri = dummyTransactions.map((url) => {
-      return `https://10.84.172.95/api/?app=nova&cmd=track&compartiment=${cid}&sensors=${url}&send=1`;
+      return `https://10.84.172.66/api/?app=nova&cmd=track&compartiment=${cid}&sensors=${url}&send=1`;
     });
 
-    // for (let i = 1; i < uri.length; i++) {
-    //   setTimeout(() => {
-    //     console.log(i);
-    //     this.httpService.get(uri[i]);
-    //   }, i * 1500 );
-    // }
+    for (let i = 1; i < uri.length; i++) {
+      setTimeout(() => {
+        console.log(i);
+        this.httpService.get(uri[i]);
+      }, i * 1500 );
+    }
 
     return dummyTransactions;
   }

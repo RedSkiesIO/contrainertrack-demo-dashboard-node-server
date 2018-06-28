@@ -8,9 +8,9 @@ export class ReadingController {
 
   @Get('mimic/:cid')
   async mimic(@Param('cid') cid: string) {
-    return await this.readingService.fakeReding();
-    // return this.readingService.buildReadingTransaction(dummyReadings);
-    //return this.readingService.mimicReadingTransaction(dummyTransactions, cid);
+    const dummyReadings = await this.readingService.findAll();
+    const dummyTransactions = this.readingService.buildReadingTransaction(dummyReadings);
+    return this.readingService.mimicReadingTransaction(dummyTransactions, cid);
     // res.status(HttpStatus.OK).json(this.sensorService.mimicSensor());
     // console.log(string);
     // return string;
