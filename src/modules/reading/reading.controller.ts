@@ -1,4 +1,4 @@
-import { Get, Controller, Res, HttpStatus } from '@nestjs/common';
+import { Get, Controller, Res, HttpStatus, Param } from '@nestjs/common';
 import { ReadingService } from './reading.service';
 import { Reading } from './reading.entity';
 
@@ -6,10 +6,11 @@ import { Reading } from './reading.entity';
 export class ReadingController {
   constructor(private readonly readingService: ReadingService) {}
 
-  @Get('mimic')
-  async mimic() {
-    const dummyReadings = await this.readingService.findAll();
-    return this.readingService.mimicSensor(dummyReadings);
+  @Get('mimic/:cid')
+  async mimic(@Param('cid') cid: string) {
+    return await this.readingService.findAll();
+    // return this.readingService.buildReadingTransaction(dummyReadings);
+    //return this.readingService.mimicReadingTransaction(dummyTransactions, cid);
     // res.status(HttpStatus.OK).json(this.sensorService.mimicSensor());
     // console.log(string);
     // return string;

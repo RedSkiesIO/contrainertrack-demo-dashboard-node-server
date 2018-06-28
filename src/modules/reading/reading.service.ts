@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { encode } from 'bs58';
+import { isArray } from 'util';
+import { TaskQueue } from 'cwait';
 
 @Injectable()
 export class ReadingService {
@@ -15,25 +17,35 @@ export class ReadingService {
     private readonly httpService: HttpService,
   ) {}
 
-  mimicSensor(dummyReadings) {
-    const preparedData = dummyReadings.map((reading) => {
-      return encode(Buffer.from(JSON.stringify(reading)));
+  sleep(ms) {
+    console.log(`sleeping for ${ms} seconds`);
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async mimicReadingTransaction(dummyTransactions: Array<object>, cid: string) {
+
+    const uri = dummyTransactions.map((url) => {
+      return `https://10.84.172.95/api/?app=nova&cmd=track&compartiment=${cid}&sensors=${url}&send=1`;
     });
 
-    for (let reading in preparedData) {
-      const response = this.httpService.get(
-        `https://10.84.172.95/api/?app=nova&cmd=track&compartiment=${preparedData[reading]}&sensors=kjuhgsfjsgdhfhsdlkghf&send=1`,
-      ).pipe(
-        map(response => response.data),
-      );
-      console.log(response);
-    }
+    // for (let i = 1; i < uri.length; i++) {
+    //   setTimeout(() => {
+    //     console.log(i);
+    //     this.httpService.get(uri[i]);
+    //   }, i * 1500 );
+    // }
 
-    return true;
+    return dummyTransactions;
+  }
+
+  buildReadingTransaction(dummyReadings: Array<object>): Array<object> {
+    return dummyReadings.map((reading) => {
+      // console.log(dummyReadings);
+      return encode(Buffer.from(JSON.stringify(reading)));
+    });
   }
 
   async findAll() {
-    return await this.readingRepository.createQueryBuilder().select().limit(999).getMany();
-    // return await this.sensorRepository.query('SELECT * FROM reading;');
+    return await this.readingRepository.createQueryBuilder().select().getMany();
   }
 }
