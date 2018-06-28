@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { encode } from 'bs58';
 import { isArray } from 'util';
+import { TaskQueue } from 'cwait';
 
 @Injectable()
 export class ReadingService {
@@ -28,11 +29,16 @@ export class ReadingService {
     });
 
     for (let i = 1; i < uri.length; i++) {
-      setTimeout(() => {
-        console.log(i);
-        this.httpService.get(uri[i]);
-      }, i * 1500 );
+      console.log(i);
+      this.httpService.get(uri[i]);
     }
+
+    const MAX_SIMULTANEOUS_REQUESTS = 20;
+
+    console.log(uri);
+
+    // const queue = new TaskQueue(Promise, MAX_SIMULTANEOUS_REQUESTS);
+    // const results = await Promise.all(uri.map(queue.wrap(async uri => await this.httpService.get(uri))));
 
     return dummyTransactions;
   }
