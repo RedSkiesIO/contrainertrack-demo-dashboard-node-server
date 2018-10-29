@@ -1,6 +1,5 @@
 export class MoveItemDTO {
-    readonly compId: number;
-    readonly item: number;
-    readonly action: string;
-    readonly send: boolean;
+    readonly compartment_id: number;
+    readonly name: string;
+    readonly action: boolean;
 }
